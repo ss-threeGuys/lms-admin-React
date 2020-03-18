@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { Button } from "antd";
 class Admin extends Component {
   clickButton = text => {
     alert(`Hi, I am a ${text}`);
@@ -7,7 +7,9 @@ class Admin extends Component {
 
   render() {
     return (
-      <button onClick={() => this.clickButton("Admin")}> Do not Click </button>
+      <Button type="primary" onClick={() => this.clickButton("Admin")}>
+        Do not Click
+      </Button>
     );
   }
 }
