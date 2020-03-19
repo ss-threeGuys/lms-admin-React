@@ -7,10 +7,6 @@ import Publishers from '../components/Publishers';
 
 export default class AppBody extends React.Component{
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
       return (
           <Switch>
