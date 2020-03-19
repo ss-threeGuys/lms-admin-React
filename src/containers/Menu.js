@@ -17,6 +17,14 @@ export default class Menu extends React.Component{
                 { label: "Borrower", routerLink: [`${baseRoute}borrowers`] }
               ]
         };
+
+        for (const item of this.state.items) {
+            console.log(item, window.location.hash.replace(/^#\//, ''));
+            if (window.location.hash.replace(/^#\//, '') === item.routerLink[0]) {
+                this.state.activeItem = item;
+                break;
+            }
+        }
     }
     
     onTabChange(event) {
