@@ -1,17 +1,19 @@
 import { combineReducers } from 'redux';
 
-import authorsReducer from './authorsReducer';
+// import authorsReducer from './authorsReducer';
 import booksReducer from './booksReducer';
-import genresReducer from './genresReducer';
-import publishersReducer from './publishersReducer';
-import branchesReducer from './branchesReducer';
-import borrowersReducer from './borrowersReducer';
+// import genresReducer from './genresReducer';
+// import publishersReducer from './publishersReducer';
+// import branchesReducer from './branchesReducer';
+// import borrowersReducer from './borrowersReducer';
 
-export default rootReducer = combineReducers({
-    authorsReducer,
+const rootReducer = combineReducers({
+    // authorsReducer,
     booksReducer,
-    genresReducer,
-    publishersReducer,
-    branchesReducer,
-    borrowersReducer
+    // genresReducer,
+    // publishersReducer,
+    // branchesReducer,
+    // borrowersReducer
 });
+
+export default rootReducer;
