@@ -1,5 +1,5 @@
 import store from '../../store';
-import { promiseStart, promiseFulfilled } from '.';
+import { promiseStart, promiseFulfilled, promiseRejected } from '.';
 
 export default class PromiseAction {
 
@@ -25,7 +25,7 @@ export default class PromiseAction {
     }
 
     onRejected(error) {
-        this.store.dispatch(promiseFulfilled(this.target, this.task, this.requestPayload, error));
+        this.store.dispatch(promiseRejected(this.target, this.task, this.requestPayload, error));
     }
 
 }
