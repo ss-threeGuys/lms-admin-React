@@ -4,12 +4,16 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
 import columnMap from '../domains/publisher/publisher.map'
+import { Target } from '../store/reducers';
+import { connect } from 'react-redux';
 
-export default class Publishers extends React.Component{
+class Publishers extends React.Component{
 
 
     constructor(props) {
         super(props);
+    
+
         this.componentName = 'Publishers'
         this.state = {
             data: [
@@ -30,6 +34,7 @@ export default class Publishers extends React.Component{
         };
     }
 
+ 
 
     onRowSelect(event) {
         console.log(event);
@@ -37,7 +42,9 @@ export default class Publishers extends React.Component{
 
     onPage(event) {
         console.log(event);
-        this.setState({loading: true});
+        const currentPage = 1 + (event.first/this.props.pageSize)
+        // this.props.dispatch(readBooks('title', 1, currentPage, this.props.pageSize))
+        this.setState({first : event.first})
     }
 
     onModelFilterChange(event) {
@@ -87,4 +94,18 @@ export default class Publishers extends React.Component{
     
     }
 
+    
+
 }
+
+function mapStateToProps(state, props)  {
+
+    return state;
+}
+
+function mapDispatchToProp(dispatch, props) {
+
+
+}
+
+export default connect(mapStateToProps, mapDispatchToProp)(Publishers)
