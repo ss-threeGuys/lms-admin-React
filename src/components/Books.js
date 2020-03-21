@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { readBooks, addBooks } from '../store/actions/bookActions'
+import { readBooks, addBooks, readAllAuthors, readAllGenres, readAllPublishers } from '../store/actions/bookActions'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { MultiSelect } from 'primereact/multiselect';
+import { Dropdown } from 'primereact/dropdown'
 
 
 export class Books extends React.Component {
@@ -16,33 +18,82 @@ export class Books extends React.Component {
         this.componentName = 'Books'
         this.state = {
             first: 0,
-
+            displayDialog: false
         }
 
 
 
     }
 
-    componentDidMount() {
-        console.log('in Component Did Mount')
-        console.log(this.props)
-        this.props.dispatch(readBooks('title', 1, 1, 10));
+    getAllAuthors() {
+        readAllAuthors()
+            .then(_authors => {
+                this.setState({ authors: _authors.data.map(author => ({ label: author.name, value: author._id })) })
+
+            })
     }
 
-     onPage = (event) => {
-        console.log(event);
+    getAllGenres() {
+        readAllGenres()
+            .then(_genres => {
+                this.setState({ genres: _genres.data.map(genre => ({ label: genre.name, value: genre._id })) })
+            })
+    }
+
+    getAllPublishers() {
+        readAllPublishers()
+            .then(_publishers => {
+                this.setState({ publishers: _publishers.data.map(publisher => ({ label: publisher.name, value: publisher._id })) })
+            })
+    }
+
+    componentDidMount() {
+        console.log('in Component Did Mount')
+
+        this.props.dispatch(readBooks('title', 1, 1, 10));
+        this.getAllPublishers();
+        this.getAllGenres();
+        this.getAllAuthors();
+
+    }
+
+    onPage = (event) => {
+
         const currentPage = 1 + (event.first / this.props.pageSize)
         this.props.dispatch(readBooks('title', 1, currentPage, this.props.pageSize))
         this.setState({ first: event.first })
+
     }
 
 
     addNew = () => {
         this.newBook = true;
         this.setState({
-            book: { title: '', authors: [], genres: [], publisher: [] },
+            book: { title: '', authors: [], genres: [], publisher: '' },
             displayDialog: true
         });
+    }
+
+    save = () => {
+        console.log("this.state.book: " + JSON.stringify(this.state.book));
+        if (this.newBook) {
+            this.props.dispatch(addBooks(this.state.book))
+                .then(() => {
+                    this.props.dispatch(readBooks('title', 1, this.props.currentPage, this.props.pageSize));
+                })
+        }
+        else {
+            // this.props.dispatch(updateBooks(this.state.book))
+        }
+
+
+        this.setState({ selectedBook: null, book: null, displayDialog: false });
+    }
+
+    updateProperty = (property, value) => {
+        let book = this.state.book;
+        book[property] = value;
+        this.setState({ book: book })
     }
 
     mapBooksToOutputBook(books) {
@@ -65,7 +116,7 @@ export class Books extends React.Component {
     render() {
 
         const outputBooks = this.mapBooksToOutputBook(this.props.books);
-
+        // console.log("outputBoks: " + JSON.stringify(outputBooks))
         let footer = <div className="p-clearfix" style={{ width: '100%' }}>
             <Button style={{ float: 'left' }} label="Add" icon="pi pi-plus" onClick={this.addNew} />
         </div>;
@@ -103,7 +154,20 @@ export class Books extends React.Component {
                             <div className="p-col-8" style={{ padding: '.5em' }}>
                                 <InputText id="title" onChange={(e) => { this.updateProperty('title', e.target.value) }} value={this.state.book.title} />
                             </div>
+                            <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="authors">Authors</label></div>
+                            <div className="p-col-8" style={{ padding: '.5em' }}>
+                                <MultiSelect options={this.state.authors} id="authors" onChange={(e) => { this.updateProperty('authors', e.target.value) }} value={this.state.book.authors}  filter={true} />
+                            </div>
+                            <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="genres">Genres</label></div>
+                            <div className="p-col-8" style={{ padding: '.5em' }}>
+                                <MultiSelect options={this.state.genres} id="genres" onChange={(e) => { this.updateProperty('genres', e.target.value) }} value={this.state.book.genres} filter={true} />
+                            </div>
+                            <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="publishers">Publishers</label></div>
+                            <div className="p-col-8" style={{ padding: '.5em' }}>
+                                <Dropdown options={this.state.publishers} id="publishers" onChange={(e) => { this.updateProperty('publisher', e.target.value) }} value={this.state.book.publisher} filter={true} />
+                            </div>
                         </div>
+
                     }
                 </Dialog>
             </div>

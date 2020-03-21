@@ -36,7 +36,7 @@ const bookReducer = (state = initialState, action) => {
         case READ_BOOKS_SUCCESFUL:
             return { ...state, paging: action.data.pop(), books: action.data, loading: false };
         case ADD_BOOKS_SUCCESFUL:
-            return { ...state, books: [...state.books, action.data], loading: false };
+            return { ...state, loading: false };
         case READ_BOOKS_PENDING:
         case ADD_BOOKS_PENDING:
             return { ...state, loading: true };

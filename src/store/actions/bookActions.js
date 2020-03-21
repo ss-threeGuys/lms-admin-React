@@ -3,13 +3,25 @@ import {
     ADD_BOOKS_FAILURE, ADD_BOOKS_SUCCESFUL, ADD_BOOKS_PENDING
 } from './actionTypes';
 import axios from 'axios';
-const BASEURL = 'http://localhost:3000/admin/books/';
+const BASEURL = 'http://localhost:3000/admin/';
 
+
+export const readAllAuthors = () => {
+    return axios.get(BASEURL + 'authors')
+}
+
+export const readAllGenres = () => {
+    return axios.get(BASEURL + 'genres')
+}
+
+export const readAllPublishers = () => {
+    return axios.get(BASEURL + 'publishers')
+}
 
 export const readBooks = (sortField, sortOrder, curPage, pageSize) => dispatch => {
     dispatch(_readBooksStarted());
     return axios.get(
-        `${BASEURL}paging?sortField=${sortField}&sortOrder=${sortOrder}&currentPage=${curPage}&pageSize=${pageSize}`)
+        `${BASEURL}books/paging?sortField=${sortField}&sortOrder=${sortOrder}&currentPage=${curPage}&pageSize=${pageSize}`)
         .then(res => {
             dispatch(_readBooksSuccess(res));
         })
@@ -21,7 +33,7 @@ export const readBooks = (sortField, sortOrder, curPage, pageSize) => dispatch =
 
 export const addBooks = (book) => dispatch => {
     dispatch(_addBooksStarted());
-    return axios.post(BASEURL, book)
+    return axios.post(BASEURL + 'books', book)
     .then(res => dispatch(_addBooksSuccess(res)))
     .catch(error => dispatch(_addBooksFailed(error)));
 }
