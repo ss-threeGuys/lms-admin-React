@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { readBooks, addBooks, readAllAuthors, readAllGenres, readAllPublishers } from '../store/actions/bookActions'
+import { readBooks, addBooks, updateBooks, readAllAuthors, readAllGenres, readAllPublishers } from '../store/actions/bookActions'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -57,6 +57,21 @@ export class Books extends React.Component {
 
     }
 
+    onBookSelect = (e) => {
+        console.log(e.data);
+        this.newCar = false;
+        this.setState({
+            displayDialog: true,
+            book: Object.assign({},
+                {_id : e.data._id,
+                title : e.data.title,
+                authors : e.data.authorIds,
+                genres : e.data.genreIds,
+                publisher: e.data.publisherId}
+                    )
+        });
+    }
+
     onPage = (event) => {
 
         const currentPage = 1 + (event.first / this.props.pageSize)
@@ -83,7 +98,10 @@ export class Books extends React.Component {
                 })
         }
         else {
-            // this.props.dispatch(updateBooks(this.state.book))
+            this.props.dispatch(updateBooks(this.state.book))
+                .then(() => {
+                    this.props.dispatch(readBooks('title', 1, this.props.currentPage, this.props.pageSize));
+                })
         }
 
 
@@ -137,7 +155,9 @@ export class Books extends React.Component {
             <div>
                 {this.componentName}
                 <DataTable value={outputBooks} paginator={true} rows={this.props.pageSize} totalRecords={this.props.count}
-                    lazy={true} first={this.state.first} onPage={this.onPage} loading={this.props.loading} footer={footer}>
+                    lazy={true} first={this.state.first} onPage={this.onPage} loading={this.props.loading} footer={footer}
+                    selectionMode="single" selection={this.state.selectedBook} onSelectionChange={e=> this.setState({selectedBook : e.value})}
+                    onRowSelect={this.onBookSelect}> 
 
                     <Column field="title" header="Title" />
                     <Column field="authorNames" header="Authors" />
@@ -156,7 +176,7 @@ export class Books extends React.Component {
                             </div>
                             <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="authors">Authors</label></div>
                             <div className="p-col-8" style={{ padding: '.5em' }}>
-                                <MultiSelect options={this.state.authors} id="authors" onChange={(e) => { this.updateProperty('authors', e.target.value) }} value={this.state.book.authors}  filter={true} />
+                                <MultiSelect options={this.state.authors} id="authors" onChange={(e) => { this.updateProperty('authors', e.target.value) }} value={this.state.book.authors} filter={true} />
                             </div>
                             <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="genres">Genres</label></div>
                             <div className="p-col-8" style={{ padding: '.5em' }}>

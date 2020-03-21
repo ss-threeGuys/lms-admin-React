@@ -1,6 +1,7 @@
 import {
     READ_BOOKS_FAILURE, READ_BOOKS_SUCCESFUL, READ_BOOKS_PENDING,
-    ADD_BOOKS_FAILURE, ADD_BOOKS_SUCCESFUL, ADD_BOOKS_PENDING
+    ADD_BOOKS_FAILURE, ADD_BOOKS_SUCCESFUL, ADD_BOOKS_PENDING,
+    UPDATE_BOOKS_FAILURE, UPDATE_BOOKS_SUCCESFUL, UPDATE_BOOKS_PENDING
 } from './actionTypes';
 import axios from 'axios';
 const BASEURL = 'http://localhost:3000/admin/';
@@ -36,6 +37,14 @@ export const addBooks = (book) => dispatch => {
     return axios.post(BASEURL + 'books', book)
     .then(res => dispatch(_addBooksSuccess(res)))
     .catch(error => dispatch(_addBooksFailed(error)));
+}
+
+export const updateBooks = (book) => dispatch => {
+    dispatch(_updateBooksStarted());
+    return axios.put(BASEURL + 'books/' + book._id, book )
+    .then(() => dispatch(_updateBooksSuccess()))
+    .catch((error) => dispatch(_updateBooksFailed(error)));
+
 }
 
 const _readBooksSuccess = (res) => {
@@ -78,24 +87,24 @@ const _addBooksStarted = () => {
     };
 }
 
-// const _updateBooksSuccess = () => {
-//     return {
-//         type: UPDATE_BOOKS_SUCCESFUL
-//     };
-// }
+const _updateBooksSuccess = () => {
+    return {
+        type: UPDATE_BOOKS_SUCCESFUL
+    };
+}
 
-// const _updateBooksFailed = (error) => {
-//     return {
-//         type: UPDATE_BOOKS_FAILURE,
-//         error
-//     };
-// }
+const _updateBooksFailed = (error) => {
+    return {
+        type: UPDATE_BOOKS_FAILURE,
+        error
+    };
+}
 
-// const _updateBooksStarted = () => {
-//     return {
-//         type: UPDATE_BOOKS_PENDING
-//     };
-// }
+const _updateBooksStarted = () => {
+    return {
+        type: UPDATE_BOOKS_PENDING
+    };
+}
 
 // const _deleteBooksSuccess = () => {
 //     return {
