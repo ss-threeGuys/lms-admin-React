@@ -18,8 +18,7 @@ export class Books extends React.Component {
             first: 0,
 
         }
-        this.onPage = this.onPage.bind(this);
-        this.addNew = this.addNew.bind(this);
+
 
 
     }
@@ -30,7 +29,7 @@ export class Books extends React.Component {
         this.props.dispatch(readBooks('title', 1, 1, 10));
     }
 
-    onPage(event) {
+     onPage = (event) => {
         console.log(event);
         const currentPage = 1 + (event.first / this.props.pageSize)
         this.props.dispatch(readBooks('title', 1, currentPage, this.props.pageSize))
@@ -38,7 +37,7 @@ export class Books extends React.Component {
     }
 
 
-    addNew() {
+    addNew = () => {
         this.newBook = true;
         this.setState({
             book: { title: '', authors: [], genres: [], publisher: [] },
