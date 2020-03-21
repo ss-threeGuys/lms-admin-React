@@ -1,15 +1,16 @@
 import { combineReducers } from 'redux';
 import {
-    READ_BOOKS_SUCCESFUL, READ_BOOKS_PENDING, READ_BOOKS_FAILURE
+    READ_BOOKS_SUCCESFUL, READ_BOOKS_PENDING, READ_BOOKS_FAILURE,
+    ADD_BOOKS_FAILURE, ADD_BOOKS_SUCCESFUL, ADD_BOOKS_PENDING
 } from '../actions/actionTypes';
 const initialState = {
     books: [
         {
-            _id : null,
+            _id: null,
             title: null,
-            authors : [],
-            genres : [],
-            publisher : {}
+            authors: [],
+            genres: [],
+            publisher: {}
         }
     ],
     paging: {
@@ -33,11 +34,16 @@ const initialState = {
 const bookReducer = (state = initialState, action) => {
     switch (action.type) {
         case READ_BOOKS_SUCCESFUL:
-            return { ...state, paging: action.data.pop(), books: action.data, loading: false }
+            return { ...state, paging: action.data.pop(), books: action.data, loading: false };
+        case ADD_BOOKS_SUCCESFUL:
+            return { ...state, books: [...state.books, action.data], loading: false };
         case READ_BOOKS_PENDING:
+        case ADD_BOOKS_PENDING:
             return { ...state, loading: true };
         case READ_BOOKS_FAILURE:
+        case ADD_BOOKS_FAILURE:
             return { ...state, error: action.error, loading: false };
+
         default:
             return state;
     }

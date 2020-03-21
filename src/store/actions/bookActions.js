@@ -1,5 +1,6 @@
 import {
-    READ_BOOKS_FAILURE, READ_BOOKS_SUCCESFUL, READ_BOOKS_PENDING
+    READ_BOOKS_FAILURE, READ_BOOKS_SUCCESFUL, READ_BOOKS_PENDING,
+    ADD_BOOKS_FAILURE, ADD_BOOKS_SUCCESFUL, ADD_BOOKS_PENDING
 } from './actionTypes';
 import axios from 'axios';
 const BASEURL = 'http://localhost:3000/admin/books/';
@@ -17,6 +18,13 @@ export const readBooks = (sortField, sortOrder, curPage, pageSize) => dispatch =
             dispatch(_readBooksFailed(error));
         });
 };
+
+export const addBooks = (book) => dispatch => {
+    dispatch(_addBooksStarted());
+    return axios.post(BASEURL, book)
+    .then(res => dispatch(_addBooksSuccess(res)))
+    .catch(error => dispatch(_addBooksFailed(error)));
+}
 
 const _readBooksSuccess = (res) => {
     return {
@@ -38,25 +46,25 @@ const _readBooksStarted = () => {
     };
 }
 
-// const _addBooksSuccess = (res) => {
-//     return {
-//         type: ADD_BOOKS_SUCCESFUL,
-//         data: res.data
-//     };
-// }
+const _addBooksSuccess = (res) => {
+    return {
+        type: ADD_BOOKS_SUCCESFUL,
+        data: res.data
+    };
+}
 
-// const _addBooksFailed = (error) => {
-//     return {
-//         type: ADD_BOOKS_FAILURE,
-//         error
-//     };
-// }
+const _addBooksFailed = (error) => {
+    return {
+        type: ADD_BOOKS_FAILURE,
+        error
+    };
+}
 
-// const _addBooksStarted = () => {
-//     return {
-//         type: ADD_BOOKS_PENDING
-//     };
-// }
+const _addBooksStarted = () => {
+    return {
+        type: ADD_BOOKS_PENDING
+    };
+}
 
 // const _updateBooksSuccess = () => {
 //     return {
