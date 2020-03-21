@@ -5,7 +5,7 @@ import { combineReducers } from 'redux';
 import genresReducer from './genresReducer';
 // import publishersReducer from './publishersReducer';
 // import branchesReducer from './branchesReducer';
-// import borrowersReducer from './borrowersReducer';
+import borrowersReducer from './borrowersReducer';
 
 export const Target = {
     BOOK        : 'TARGET:BOOK',
@@ -29,5 +29,5 @@ export default combineReducers({
     genresReducer,
     // [Target.PUBLISHER]  : publishersReducer,
     // [Target.BRANCH]     : branchesReducer,
-    // [Target.BORROWER]   : borrowersReducer,
+    borrowersReducer,
 });
