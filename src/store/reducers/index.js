@@ -8,7 +8,7 @@ import booksReducer from './booksReducer';
 // import borrowersReducer from './borrowersReducer';
 
 
-export default rootReducer;
+
 export const Target = {
     BOOK        : 'TARGET:BOOK',
     PUBLISHER   : 'TARGET:PUBLISHER',
@@ -26,10 +26,10 @@ export const Task = {
 }
 
 export default combineReducers({
-    [Target.AUTHOR]     : authorsReducer,
+    // [Target.AUTHOR]     : authorsReducer,
     booksReducer,
-    [Target.GENRE]      : genresReducer,
-    [Target.PUBLISHER]  : publishersReducer,
-    [Target.BRANCH]     : branchesReducer,
-    [Target.BORROWER]   : borrowersReducer,
+    // [Target.GENRE]      : genresReducer,
+    // [Target.PUBLISHER]  : publishersReducer,
+    // [Target.BRANCH]     : branchesReducer,
+    // [Target.BORROWER]   : borrowersReducer,
 });
