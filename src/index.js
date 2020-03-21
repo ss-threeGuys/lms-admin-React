@@ -7,6 +7,8 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 
 import App from './App';
+import { Provider } from 'react-redux'
+
 import * as serviceWorker from './serviceWorker';
 
 import store from './store';

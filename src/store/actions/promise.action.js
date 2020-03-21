@@ -1,31 +1,30 @@
-import store from '../../store';
 import { promiseStart, promiseFulfilled, promiseRejected } from '.';
 
 export default class PromiseAction {
 
     constructor(target, task, promise, requestPayload = null) {
-        this.store = store;
+        
         this.target = target;
         this.task = task;
         this.promise = promise;
         this.requestPayload = requestPayload;
     }
 
-    start() {
-
+    thunk(dispatch, getState) {
+        this.dispatch = dispatch;
         this.promise
             .then( response => this.onFulfilled(response) )
             .catch( error => this.onRejected(error) );
 
-        this.store.dispatch(promiseStart(this.target, this.task, this.promise, this.requestPayload));
+        this.dispatch(promiseStart(this.target, this.task, this.promise, this.requestPayload));
     }
 
     onFulfilled(response) {
-        this.store.dispatch(promiseFulfilled(this.target, this.task, this.requestPayload, response));
+        this.dispatch(promiseFulfilled(this.target, this.task, this.requestPayload, response));
     }
 
     onRejected(error) {
-        this.store.dispatch(promiseRejected(this.target, this.task, this.requestPayload, error));
+        this.dispatch(promiseRejected(this.target, this.task, this.requestPayload, error));
     }
 
 }
