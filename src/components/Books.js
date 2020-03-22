@@ -155,7 +155,7 @@ export class Books extends React.Component {
         book[property] = value;
         this.setState({ book: book })
         if (property === 'title') {
-            this.setState({ valid: value.length })
+            this.setState({ valid: value.length > 1 })
         }
     }
 
