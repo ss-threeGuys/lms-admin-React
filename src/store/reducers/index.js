@@ -7,8 +7,6 @@ import publishersReducer from './publishersReducer';
 import branchesReducer from './branchesReducer';
 import borrowersReducer from './borrowersReducer';
 
-
-
 export const Target = {
     BOOK        : 'TARGET:BOOK',
     PUBLISHER   : 'TARGET:PUBLISHER',

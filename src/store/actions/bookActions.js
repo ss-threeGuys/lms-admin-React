@@ -5,25 +5,24 @@ import {
     DELETE_BOOKS_FAILURE, DELETE_BOOKS_SUCCESFUL, DELETE_BOOKS_PENDING
 } from './actionTypes';
 import axios from 'axios';
-const BASEURL = 'http://localhost:3000/admin/';
 
 
 export const readAllAuthors = () => {
-    return axios.get(BASEURL + 'authors')
+    return axios.get(process.env.REACT_APP_BASE_URL_AUTHOR)
 }
 
 export const readAllGenres = () => {
-    return axios.get(BASEURL + 'genres')
+    return axios.get(process.env.REACT_APP_BASE_URL_GENRE)
 }
 
 export const readAllPublishers = () => {
-    return axios.get(BASEURL + 'publishers')
+    return axios.get(process.env.REACT_APP_BASE_URL_PUBLISHER)
 }
 
 export const readBooks = (sortField, sortOrder, curPage, pageSize) => dispatch => {
     dispatch(_readBooksStarted());
     return axios.get(
-        `${BASEURL}books/paging?sortField=${sortField}&sortOrder=${sortOrder}&currentPage=${curPage}&pageSize=${pageSize}`)
+        `${process.env.REACT_APP_BASE_URL_BOOK}paging?sortField=${sortField}&sortOrder=${sortOrder}&currentPage=${curPage}&pageSize=${pageSize}`)
         .then(res => {
             dispatch(_readBooksSuccess(res));
         })
@@ -35,14 +34,15 @@ export const readBooks = (sortField, sortOrder, curPage, pageSize) => dispatch =
 
 export const addBooks = (book) => dispatch => {
     dispatch(_addBooksStarted());
-    return axios.post(BASEURL + 'books', book)
+   
+    return axios.post(process.env.REACT_APP_BASE_URL_BOOK, book)
     .then(res => dispatch(_addBooksSuccess(res)))
     .catch(error => dispatch(_addBooksFailed(error)));
 }
 
 export const updateBooks = (book) => dispatch => {
     dispatch(_updateBooksStarted());
-    return axios.put(BASEURL + 'books/' + book._id, book )
+    return axios.put(process.env.REACT_APP_BASE_URL_BOOK + book._id, book )
     .then(() => dispatch(_updateBooksSuccess()))
     .catch((error) => dispatch(_updateBooksFailed(error)));
 
@@ -50,7 +50,7 @@ export const updateBooks = (book) => dispatch => {
 
 export const deleteBooks = (id) => dispatch => {
     dispatch(_deleteBooksStarted());
-    return axios.delete(BASEURL + 'books/' + id)
+    return axios.delete(process.env.REACT_APP_BASE_URL_BOOK + id)
     .then(() => dispatch(_deleteBooksSuccess()))
     .catch((error) => dispatch(_deleteBooksFailed(error)));
 }
