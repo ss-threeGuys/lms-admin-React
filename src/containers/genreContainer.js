@@ -5,12 +5,9 @@ import { bindActionCreators } from 'redux';
 
 import * as genreActions from '../store/actions/genreActions'
 import {Genres} from '../components/Genres'
+import { Target } from '../store/reducers';
 
 const GenreContainer = (props) => {
-    // useEffect(() => {
-    //     const {actions} = props;
-    //     actions.readGenres('name', 1, 1, 10);
-    // }, []);
 
     return (
         <div>
@@ -21,9 +18,9 @@ const GenreContainer = (props) => {
 
 function mapStateToProps(state) {
     return {
-        genres: state.genresReducer.genre.genres,
-        __paging: state.genresReducer.genre.paging.__paging,
-        loading: state.genresReducer.genre.loading
+        genres: state[Target.GENRE].genre.genres,
+        __paging: state[Target.GENRE].genre.paging.__paging,
+        loading: state[Target.GENRE].genre.loading
     }
 }
 

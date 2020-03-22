@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 
-// import authorsReducer from './authorsReducer';
-// import booksReducer from './booksReducer';
+import authorsReducer from './authorsReducer';
+import booksReducer from './booksReducer';
 import genresReducer from './genresReducer';
-// import publishersReducer from './publishersReducer';
-// import branchesReducer from './branchesReducer';
+import publishersReducer from './publishersReducer';
+import branchesReducer from './branchesReducer';
 import borrowersReducer from './borrowersReducer';
 
 export const Target = {
@@ -24,10 +24,10 @@ export const Task = {
 }
 
 export default combineReducers({
-    // [Target.AUTHOR]     : authorsReducer,
-    // [Target.BOOK]       : booksReducer,
-    genresReducer,
-    // [Target.PUBLISHER]  : publishersReducer,
-    // [Target.BRANCH]     : branchesReducer,
-    borrowersReducer,
+    [Target.AUTHOR]     : authorsReducer,
+    [Target.BOOK]       : booksReducer,
+    [Target.GENRE]      : genresReducer,
+    [Target.PUBLISHER]  : publishersReducer,
+    [Target.BRANCH]     : branchesReducer,
+    [Target.BORROWER]   : borrowersReducer,
 });

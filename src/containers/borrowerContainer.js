@@ -5,12 +5,9 @@ import { bindActionCreators } from 'redux';
 
 import * as borrowerActions from '../store/actions/borrowerActions'
 import {Borrowers} from '../components/Borrowers'
+import { Target } from '../store/reducers';
 
 const BorrowerContainer = (props) => {
-    // useEffect(() => {
-    //     const {actions} = props;
-    //     actions.readBorrowers('name', 1, 1, 10);
-    // }, []);
 
     return (
         <div>
@@ -21,9 +18,9 @@ const BorrowerContainer = (props) => {
 
 function mapStateToProps(state) {
     return {
-        borrowers: state.borrowersReducer.borrower.borrowers,
-        __paging: state.borrowersReducer.borrower.paging.__paging,
-        loading: state.borrowersReducer.borrower.loading
+        borrowers: state[Target.BORROWER].borrower.borrowers,
+        __paging: state[Target.BORROWER].borrower.paging.__paging,
+        loading: state[Target.BORROWER].borrower.loading
     }
 }
 

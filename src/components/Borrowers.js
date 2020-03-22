@@ -4,12 +4,16 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { InputText } from "primereact/inputtext";
 import { Dialog } from "primereact/dialog";
+import {Message} from 'primereact/message';
 export class Borrowers extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             first: 0,
-            displayDialog: false
+            displayDialog: false,
+            valid: false,
+            nameValid: true,
+            phoneValid: true
         }
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
@@ -17,6 +21,7 @@ export class Borrowers extends React.Component {
         this.addNew = this.addNew.bind(this);
         this.onPage = this.onPage.bind(this);
         this.onSort = this.onSort.bind(this);
+        this.validate = this.validate.bind(this);
     }
 
     componentDidMount() {
@@ -68,12 +73,33 @@ export class Borrowers extends React.Component {
 
     onBorrowerSelect(event) {
         this.newBorrower = false;
-        this.setState({ displayDialog: true, borrower: Object.assign({}, event.data) })
+        this.setState({ displayDialog: true, borrower: Object.assign({}, event.data), valid: true })
     }
 
     addNew() {
         this.newBorrower = true;
-        this.setState({ borrower: { name: '' }, displayDialog: true });
+        this.setState({ borrower: { name: '' }, displayDialog: true, valid: false });
+    }
+
+    validate() {
+        if (this.state.borrower.name && (!this.state.borrower.phone || /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(this.state.borrower.phone))) {
+            this.setState({valid: true});
+        }
+        if (!this.state.borrower.name) {
+            this.setState({valid: false, nameValid: false});
+        }
+        if (this.state.borrower.name) {
+            this.setState({nameValid: true});
+        }
+        if (this.state.borrower.phone && !(/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(this.state.borrower.phone))) {
+            this.setState({valid: false, phoneValid: false});
+        }
+        if (this.state.borrower.phone && /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(this.state.borrower.phone)) {
+            this.setState({phoneValid: true});
+        }
+        if (!this.state.borrower.phone) {
+            this.setState({phoneValid: true})
+        }
     }
 
     render() {
@@ -84,8 +110,8 @@ export class Borrowers extends React.Component {
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Delete" icon="pi pi-times" onClick={this.delete} />
-            <Button label="Save" icon="pi pi-check" onClick={this.save} />
+            {(!this.newBorrower) && <Button label="Delete" icon="pi pi-times" onClick={this.delete} />}
+            <Button disabled={!this.state.valid} label="Save" icon="pi pi-check" onClick={this.save} />
         </div>;
 
         return (
@@ -106,17 +132,19 @@ export class Borrowers extends React.Component {
                             this.state.borrower &&
 
                             <div className="p-grid p-fluid">
-                                <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="name">Name</label></div>
+                                <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="name">Name*</label></div>
                                 <div className="p-col-8" style={{ padding: '.5em' }}>
-                                    <InputText id="name" onChange={(e) => { this.updateProperty('name', e.target.value) }} value={this.state.borrower.name} />
+                                    <InputText id="name" onChange={(e) => { this.updateProperty('name', e.target.value); this.validate() }} value={this.state.borrower.name} />
+                                    {(!this.state.nameValid) && <Message severity="error" text="Name is required"></Message>}
                                 </div>
                                 <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="name">Address</label></div>
                                 <div className="p-col-8" style={{ padding: '.5em' }}>
-                                    <InputText id="address" onChange={(e) => { this.updateProperty('address', e.target.value) }} value={this.state.borrower.address} />
+                                    <InputText id="address" onChange={(e) => { this.updateProperty('address', e.target.value); this.validate() }} value={this.state.borrower.address || ''} />
                                 </div>
                                 <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="name">Phone Number</label></div>
                                 <div className="p-col-8" style={{ padding: '.5em' }}>
-                                    <InputText id="phone" onChange={(e) => { this.updateProperty('phone', e.target.value) }} value={this.state.borrower.phone} />
+                                    <InputText id="phone" onChange={(e) => { this.updateProperty('phone', e.target.value); this.validate() }} value={this.state.borrower.phone || ''} />
+                                    {(!this.state.phoneValid) && <Message severity="error" text="Please enter valid phone number"></Message>}
                                 </div>
                             </div>
                         }
