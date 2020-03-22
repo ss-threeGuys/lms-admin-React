@@ -1,27 +1,45 @@
-import {
-  READ_BRANCHES_FAILURE,
-  READ_BRANCHES_SUCCESSFUL,
-  READ_BRANCHES_PENDING
-} from "./actionTypes";
+import * as actionTypes from "./actionTypes";
 import axios from "axios";
 
-export const setBranchesData = branches => {
+export const readBranchesSuccess = (branches, pagingInfo) => {
   return {
-    type: READ_BRANCHES_SUCCESSFUL,
+    type: actionTypes.READ_BRANCHES_SUCCESSFUL,
     branches: branches,
-    pagingInfo: branches.pop().__paging
+    pagingInfo: pagingInfo
   };
 };
 
-export const readBranchesFailed = () => {
+export const readBranchesFailed = error => {
   return {
-    type: READ_BRANCHES_FAILURE
+    type: actionTypes.READ_BRANCHES_FAILURE,
+    error: error
   };
 };
 
 export const readBranchesPending = () => {
   return {
-    type: READ_BRANCHES_PENDING
+    type: actionTypes.READ_BRANCHES_PENDING
+  };
+};
+
+export const addBranchesSuccess = (branches, pagingInfo) => {
+  return {
+    type: actionTypes.ADD_BRANCHES_SUCCESSFUL,
+    branches: branches,
+    pagingInfo: pagingInfo
+  };
+};
+
+export const addBranchesFailed = error => {
+  return {
+    type: actionTypes.ADD_BRANCHES_FAILURE,
+    error: error
+  };
+};
+
+export const addBranchesPending = () => {
+  return {
+    type: actionTypes.ADD_BRANCHES_PENDING
   };
 };
 
@@ -33,20 +51,28 @@ export const readBranches = pagingInfo => {
 
   return dispatch => {
     dispatch(readBranchesPending());
-    console.log(
-      `${process.env.REACT_APP_BASE_URL_BRANCH}paging?sortField=${sortField}&sortOrder=${sortOrder}&currentPage=${curPage}&pageSize=${pageSize}`
-    );
+
     axios
       .get(
         `${process.env.REACT_APP_BASE_URL_BRANCH}paging?sortField=${sortField}&sortOrder=${sortOrder}&currentPage=${curPage}&pageSize=${pageSize}`
       )
       .then(response => {
         //console.log(`publisher data ${JSON.stringify(response.data, null, 2)}`);
-        dispatch(setBranchesData(response.data));
+        let branches = response.data;
+        let pagingInfo = branches.pop().__paging;
+
+        dispatch(readBranchesSuccess(branches, pagingInfo));
       })
       .catch(error => {
-        console.log(error);
-        dispatch(readBranchesFailed());
+        dispatch(readBranchesFailed(error.message));
       });
+  };
+};
+
+export const addBranch = branch => {
+  return dispatch => {
+    axios
+      .post(`${process.env.REACT_APP_BASE_URL_BRANCH}branches`, branch)
+      .then(response => {});
   };
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -6,17 +6,13 @@ import { Button } from "primereact/button";
 import { connect } from "react-redux";
 import * as branchActions from "../../store/actions/branchActions";
 
-class BranchTable extends React.Component {
+class BranchTable extends Component {
   constructor(props) {
     super(props);
-    //console.log(
-    //   `paging ${JSON.stringify(this.props.pagingInfo.count, null, 2)}`
-    //  );
+
     this.componentName = "Branches";
     this.state = {
-      selected: null,
-      loading: false,
-      totalRecords: 100
+      first: 0
     };
   }
   componentDidMount() {
@@ -35,8 +31,17 @@ class BranchTable extends React.Component {
   };
 
   onPage = event => {
-    //  const currentPage = 1 + event.first / this.props.pageSize;
-    // this.props.dispatch(readBooks('title', 1, currentPage, this.props.pageSize))
+    const pageSize = this.props.pagingInfo.pageSize;
+    const currentPage = 1 + event.first / pageSize;
+
+    const pagingInfo = {
+      sortField: "branchName",
+      sortOrder: 1,
+      curPage: currentPage,
+      pageSize: pageSize
+    };
+
+    this.props.readBranches(pagingInfo);
     this.setState({ first: event.first });
   };
 
@@ -76,9 +81,9 @@ class BranchTable extends React.Component {
         />
       </div>
     );
-    console.log(`props ${JSON.stringify(this.props.branches, null, 2)}`);
     return (
       <DataTable
+        ref={el => (this.dt = el)}
         value={this.props.branches}
         paginator={true}
         rows={this.props.pagingInfo.pageSize}
@@ -90,8 +95,9 @@ class BranchTable extends React.Component {
         onSelectionChange={e => this.setState({ selected: e.value })}
         onRowSelect={this.onRowSelect}
         lazy={true}
+        first={this.state.first}
         onPage={this.onPage}
-        loading={this.state.loading}
+        loading={this.props.loading}
       >
         {this.renderColumn()}
       </DataTable>
@@ -100,13 +106,16 @@ class BranchTable extends React.Component {
 }
 
 const mapStateToProps = state => {
-  let branches = state.branchesReducer.branchData.branches;
-  let pagingInfo = state.branchesReducer.branchData.pagingInfo;
-  // let pagingInfo = branches.pop();
-  console.log(`count ${JSON.stringify(pagingInfo.count, null, 2)}`);
+  let branches = state.branchesReducer.branches;
+  let pagingInfo = state.branchesReducer.pagingInfo;
+  let loading = state.branchesReducer.requestPending;
+  let error = state.branchesReducer.error;
+
   return {
     branches: branches,
-    pagingInfo: pagingInfo
+    pagingInfo: pagingInfo,
+    loading: loading,
+    error: error
   };
 };
 
