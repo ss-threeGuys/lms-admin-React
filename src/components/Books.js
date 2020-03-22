@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { readBooks, addBooks, updateBooks, readAllAuthors, readAllGenres, readAllPublishers } from '../store/actions/bookActions'
+import { readBooks, addBooks, updateBooks, deleteBooks, readAllAuthors, readAllGenres, readAllPublishers } from '../store/actions/bookActions'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -18,7 +18,8 @@ export class Books extends React.Component {
         this.componentName = 'Books'
         this.state = {
             first: 0,
-            displayDialog: false
+            displayDialog: false,
+            valid: false,
         }
 
 
@@ -50,33 +51,61 @@ export class Books extends React.Component {
     componentDidMount() {
         console.log('in Component Did Mount')
 
-        this.props.dispatch(readBooks('title', 1, 1, 10));
+        this.props.dispatch(readBooks(this.props.sortField, this.props.sortOrder, this.props.currentPage, this.props.pageSize));
         this.getAllPublishers();
         this.getAllGenres();
         this.getAllAuthors();
 
     }
 
+
+
     onBookSelect = (e) => {
         console.log(e.data);
-        this.newCar = false;
+        this.newBook = false;
         this.setState({
             displayDialog: true,
+            valid: true,
             book: Object.assign({},
-                {_id : e.data._id,
-                title : e.data.title,
-                authors : e.data.authorIds,
-                genres : e.data.genreIds,
-                publisher: e.data.publisherId}
-                    )
+                {
+                    _id: e.data._id,
+                    title: e.data.title,
+                    authors: e.data.authorIds,
+                    genres: e.data.genreIds,
+                    publisher: e.data.publisherId
+                }
+            )
         });
     }
 
     onPage = (event) => {
 
         const currentPage = 1 + (event.first / this.props.pageSize)
-        this.props.dispatch(readBooks('title', 1, currentPage, this.props.pageSize))
+        this.props.dispatch(readBooks(this.props.sortField, this.props.sortOrder, currentPage, this.props.pageSize))
         this.setState({ first: event.first })
+
+    }
+
+    onSort = (event) => {
+        const sortFields = {
+            "title": "title",
+            "authorNames": "authors",
+            "genreNames": "genres",
+            "publisherName": "publisher"
+        }
+
+        let sortField = sortFields[event.sortField]
+        let sortOrder = this.props.sortOrder * -1;
+        
+
+        this.props.dispatch(readBooks(sortField, sortOrder, this.props.currentPage, this.props.pageSize))
+
+        this.setState({
+            sortField : sortField,
+            sortOrder : sortOrder
+        })
+
+
 
     }
 
@@ -85,6 +114,7 @@ export class Books extends React.Component {
         this.newBook = true;
         this.setState({
             book: { title: '', authors: [], genres: [], publisher: '' },
+            valid: false,
             displayDialog: true
         });
     }
@@ -94,13 +124,13 @@ export class Books extends React.Component {
         if (this.newBook) {
             this.props.dispatch(addBooks(this.state.book))
                 .then(() => {
-                    this.props.dispatch(readBooks('title', 1, this.props.currentPage, this.props.pageSize));
+                    this.props.dispatch(readBooks(this.props.sortField, this.props.sortOrder, this.props.currentPage, this.props.pageSize));
                 })
         }
         else {
             this.props.dispatch(updateBooks(this.state.book))
                 .then(() => {
-                    this.props.dispatch(readBooks('title', 1, this.props.currentPage, this.props.pageSize));
+                    this.props.dispatch(readBooks(this.props.sortField, this.props.sortOrder, this.props.currentPage, this.props.pageSize));
                 })
         }
 
@@ -108,10 +138,28 @@ export class Books extends React.Component {
         this.setState({ selectedBook: null, book: null, displayDialog: false });
     }
 
+    delete = () => {
+        this.props.dispatch(deleteBooks(this.state.book._id))
+            .then(() => this.props.dispatch(readBooks(this.props.sortField, this.props.sortOrder, this.props.currentPage, this.props.pageSize)));
+        this.setState({
+            selectedBook: null,
+            book: null,
+            displayDialog: false
+        });
+    }
+
+
+
     updateProperty = (property, value) => {
         let book = this.state.book;
         book[property] = value;
         this.setState({ book: book })
+        if (property === 'title') {
+            this.setState({ valid: value.length })
+        }
+
+
+
     }
 
     mapBooksToOutputBook(books) {
@@ -140,8 +188,8 @@ export class Books extends React.Component {
         </div>;
 
         let dialogFooter = <div className="ui-dialog-buttonpane p-clearfix">
-            <Button label="Delete" icon="pi pi-times" onClick={this.delete} />
-            <Button label="Save" icon="pi pi-check" onClick={this.save} />
+            {(!this.newBook) && <Button label="Delete" icon="pi pi-times" onClick={this.delete} />}
+            <Button disabled={!this.state.valid} label="Save" icon="pi pi-check" onClick={this.save} />
         </div>;
 
         if (this.props.loading) {
@@ -155,14 +203,14 @@ export class Books extends React.Component {
             <div>
                 {this.componentName}
                 <DataTable value={outputBooks} paginator={true} rows={this.props.pageSize} totalRecords={this.props.count}
-                    lazy={true} first={this.state.first} onPage={this.onPage} loading={this.props.loading} footer={footer}
-                    selectionMode="single" selection={this.state.selectedBook} onSelectionChange={e=> this.setState({selectedBook : e.value})}
-                    onRowSelect={this.onBookSelect}> 
+                    lazy={true} first={this.state.first} onPage={this.onPage} onSort={this.onSort} loading={this.props.loading} footer={footer}
+                    selectionMode="single" selection={this.state.selectedBook} onSelectionChange={e => this.setState({ selectedBook: e.value })}
+                    onRowSelect={this.onBookSelect}>
 
-                    <Column field="title" header="Title" />
-                    <Column field="authorNames" header="Authors" />
-                    <Column field="genreNames" header="Genres" />
-                    <Column field="publisherName" header="Publisher" />
+                    <Column field="title" header="Title" sortable={true} />
+                    <Column field="authorNames" header="Authors" sortable={true} />
+                    <Column field="genreNames" header="Genres" sortable={true} />
+                    <Column field="publisherName" header="Publisher" sortable={true} />
                 </DataTable>
 
                 <Dialog visible={this.state.displayDialog} width="300px" header="Book Details" modal={true} footer={dialogFooter} onHide={() => this.setState({ displayDialog: false })}>
@@ -172,7 +220,7 @@ export class Books extends React.Component {
                         <div className="p-grid p-fluid">
                             <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="title">Title</label></div>
                             <div className="p-col-8" style={{ padding: '.5em' }}>
-                                <InputText id="title" onChange={(e) => { this.updateProperty('title', e.target.value) }} value={this.state.book.title} />
+                                <InputText id="title" required={true} onChange={(e) => { this.updateProperty('title', e.target.value) }} value={this.state.book.title} />
                             </div>
                             <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="authors">Authors</label></div>
                             <div className="p-col-8" style={{ padding: '.5em' }}>
@@ -187,8 +235,8 @@ export class Books extends React.Component {
                                 <Dropdown options={this.state.publishers} id="publishers" onChange={(e) => { this.updateProperty('publisher', e.target.value) }} value={this.state.book.publisher} filter={true} />
                             </div>
                         </div>
-
                     }
+
                 </Dialog>
             </div>
 
@@ -203,7 +251,11 @@ export const mapStatetoProps = (state) => {
         books: state.booksReducer.book.books,
         pageSize: state.booksReducer.book.paging.__paging.pageSize,
         count: state.booksReducer.book.paging.__paging.count,
-        loading: state.booksReducer.book.loading
+        currentPage : state.booksReducer.book.paging.__paging.currentPage,
+        loading: state.booksReducer.book.loading,
+        sortField : state.booksReducer.book.paging.__paging.sortField,
+        sortOrder : parseInt(state.booksReducer.book.paging.__paging.sortOrder)
+    
     }
 }
 

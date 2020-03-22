@@ -1,7 +1,8 @@
 import {
     READ_BOOKS_FAILURE, READ_BOOKS_SUCCESFUL, READ_BOOKS_PENDING,
     ADD_BOOKS_FAILURE, ADD_BOOKS_SUCCESFUL, ADD_BOOKS_PENDING,
-    UPDATE_BOOKS_FAILURE, UPDATE_BOOKS_SUCCESFUL, UPDATE_BOOKS_PENDING
+    UPDATE_BOOKS_FAILURE, UPDATE_BOOKS_SUCCESFUL, UPDATE_BOOKS_PENDING,
+    DELETE_BOOKS_FAILURE, DELETE_BOOKS_SUCCESFUL, DELETE_BOOKS_PENDING
 } from './actionTypes';
 import axios from 'axios';
 const BASEURL = 'http://localhost:3000/admin/';
@@ -45,6 +46,13 @@ export const updateBooks = (book) => dispatch => {
     .then(() => dispatch(_updateBooksSuccess()))
     .catch((error) => dispatch(_updateBooksFailed(error)));
 
+}
+
+export const deleteBooks = (id) => dispatch => {
+    dispatch(_deleteBooksStarted());
+    return axios.delete(BASEURL + 'books/' + id)
+    .then(() => dispatch(_deleteBooksSuccess()))
+    .catch((error) => dispatch(_deleteBooksFailed(error)));
 }
 
 const _readBooksSuccess = (res) => {
@@ -106,22 +114,22 @@ const _updateBooksStarted = () => {
     };
 }
 
-// const _deleteBooksSuccess = () => {
-//     return {
-//         type: DELETE_BOOKS_SUCCESFUL
-//     };
-// }
+const _deleteBooksSuccess = () => {
+    return {
+        type: DELETE_BOOKS_SUCCESFUL
+    };
+}
 
-// const _deleteBooksFailed = (error) => {
-//     return {
-//         type: DELETE_BOOKS_FAILURE,
-//         error
-//     };
-// }
+const _deleteBooksFailed = (error) => {
+    return {
+        type: DELETE_BOOKS_FAILURE,
+        error
+    };
+}
 
-// const _deleteBooksStarted = () => {
-//     return {
-//         type: DELETE_BOOKS_PENDING
-//     };
-// }
+const _deleteBooksStarted = () => {
+    return {
+        type: DELETE_BOOKS_PENDING
+    };
+}
 
