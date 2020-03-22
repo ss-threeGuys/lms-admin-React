@@ -96,13 +96,13 @@ export class Books extends React.Component {
 
         let sortField = sortFields[event.sortField]
         let sortOrder = this.props.sortOrder * -1;
-        
+
 
         this.props.dispatch(readBooks(sortField, sortOrder, this.props.currentPage, this.props.pageSize))
 
         this.setState({
-            sortField : sortField,
-            sortOrder : sortOrder
+            sortField: sortField,
+            sortOrder: sortOrder
         })
 
 
@@ -120,7 +120,7 @@ export class Books extends React.Component {
     }
 
     save = () => {
-        console.log("this.state.book: " + JSON.stringify(this.state.book));
+    
         if (this.newBook) {
             this.props.dispatch(addBooks(this.state.book))
                 .then(() => {
@@ -157,9 +157,6 @@ export class Books extends React.Component {
         if (property === 'title') {
             this.setState({ valid: value.length })
         }
-
-
-
     }
 
     mapBooksToOutputBook(books) {
@@ -182,7 +179,7 @@ export class Books extends React.Component {
     render() {
 
         const outputBooks = this.mapBooksToOutputBook(this.props.books);
-        // console.log("outputBoks: " + JSON.stringify(outputBooks))
+       
         let footer = <div className="p-clearfix" style={{ width: '100%' }}>
             <Button style={{ float: 'left' }} label="Add" icon="pi pi-plus" onClick={this.addNew} />
         </div>;
@@ -251,11 +248,11 @@ export const mapStatetoProps = (state) => {
         books: state.booksReducer.book.books,
         pageSize: state.booksReducer.book.paging.__paging.pageSize,
         count: state.booksReducer.book.paging.__paging.count,
-        currentPage : state.booksReducer.book.paging.__paging.currentPage,
+        currentPage: state.booksReducer.book.paging.__paging.currentPage,
         loading: state.booksReducer.book.loading,
-        sortField : state.booksReducer.book.paging.__paging.sortField,
-        sortOrder : parseInt(state.booksReducer.book.paging.__paging.sortOrder)
-    
+        sortField: state.booksReducer.book.paging.__paging.sortField,
+        sortOrder: parseInt(state.booksReducer.book.paging.__paging.sortOrder)
+
     }
 }
 
