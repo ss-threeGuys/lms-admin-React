@@ -16,6 +16,7 @@ export class Genres extends React.Component {
         this.onGenreSelect = this.onGenreSelect.bind(this);
         this.addNew = this.addNew.bind(this);
         this.onPage = this.onPage.bind(this);
+        this.onSort = this.onSort.bind(this);
     }
 
     componentDidMount() {
@@ -32,22 +33,30 @@ export class Genres extends React.Component {
 
     save() {
         if (this.newGenre) {
-            this.props.actions.createGenre(this.state.genre);
+            this.props.actions.createGenre(this.state.genre)
+                .then(() => { this.readGenres() });
         }
         else {
-            this.props.actions.updateGenre(this.state.genre);
+            this.props.actions.updateGenre(this.state.genre)
+                .then(() => { this.readGenres() });
         }
         this.setState({ selectedGenre: null, genre: null, displayDialog: false });
     }
 
     onPage(event) {
-        this.setState({first: event.first});
+        this.setState({ first: event.first });
         const currentPage = 1 + (event.first / this.props.__paging.pageSize)
         this.props.actions.readGenres(this.state.sortField, this.state.sortOrder, currentPage, this.props.__paging.pageSize)
     }
 
+    onSort(event) {
+        this.setState({sortField: event.sortField, sortOrder: event.sortOrder})
+        this.props.actions.readGenres(event.sortField, event.sortOrder, this.props.__paging.currentPage, this.props.__paging.pageSize);
+    }
+
     delete() {
-        this.props.actions.deleteGenre(this.state.genre);
+        this.props.actions.deleteGenre(this.state.genre)
+            .then(() => { this.readGenres() });
         this.setState({ selectedGenre: null, genre: null, displayDialog: false });
     }
 
@@ -81,18 +90,12 @@ export class Genres extends React.Component {
 
         return (
             <div>
-                <div className="content-section introduction">
-                    <div className="feature-intro">
-                        <h1>DataTable</h1>
-                        <p>This samples demonstrates a CRUD implementation using various PrimeReact components.</p>
-                    </div>
-                </div>
 
                 <div className="content-section implementation">
                     <DataTable value={this.props.genres} paginator={true} rows={this.props.__paging.pageSize} header={header} footer={footer} totalRecords={this.props.__paging.count}
                         selectionMode="single" selection={this.state.selectedGenre} onSelectionChange={event => this.setState({ selectedGenre: event.value })}
                         onRowSelect={this.onGenreSelect} lazy={true} first={this.state.first} onPage={this.onPage} loading={this.props.loading}
-                        sortField={this.state.sortField} sortOrder={this.state.sortOrder} onSort={(e) => this.setState({ sortField: e.sortField, sortOrder: e.sortOrder })}>
+                        sortField={this.state.sortField} sortOrder={this.state.sortOrder} onSort={this.onSort}>
                         <Column field="name" header="Name" sortable={true} />
                     </DataTable>
 

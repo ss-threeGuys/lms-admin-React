@@ -16,6 +16,7 @@ export class Borrowers extends React.Component {
         this.onBorrowerSelect = this.onBorrowerSelect.bind(this);
         this.addNew = this.addNew.bind(this);
         this.onPage = this.onPage.bind(this);
+        this.onSort = this.onSort.bind(this);
     }
 
     componentDidMount() {
@@ -32,10 +33,12 @@ export class Borrowers extends React.Component {
 
     save() {
         if (this.newBorrower) {
-            this.props.actions.createBorrower(this.state.borrower);
+            this.props.actions.createBorrower(this.state.borrower)
+                .then(() => { this.readBorrowers() });
         }
         else {
-            this.props.actions.updateBorrower(this.state.borrower);
+            this.props.actions.updateBorrower(this.state.borrower)
+                .then(() => { this.readBorrowers() });
         }
         this.setState({ selectedBorrower: null, borrower: null, displayDialog: false });
     }
@@ -46,8 +49,14 @@ export class Borrowers extends React.Component {
         this.props.actions.readBorrowers(this.state.sortField, this.state.sortOrder, currentPage, this.props.__paging.pageSize)
     }
 
+    onSort(event) {
+        this.setState({sortField: event.sortField, sortOrder: event.sortOrder})
+        this.props.actions.readBorrowers(event.sortField, event.sortOrder, this.props.__paging.currentPage, this.props.__paging.pageSize);
+    }
+
     delete() {
-        this.props.actions.deleteBorrower(this.state.borrower);
+        this.props.actions.deleteBorrower(this.state.borrower)
+            .then(() => { this.readBorrowers() });
         this.setState({ selectedBorrower: null, borrower: null, displayDialog: false });
     }
 
@@ -81,18 +90,12 @@ export class Borrowers extends React.Component {
 
         return (
             <div>
-                <div className="content-section introduction">
-                    <div className="feature-intro">
-                        <h1>DataTable</h1>
-                        <p>This samples demonstrates a CRUD implementation using various PrimeReact components.</p>
-                    </div>
-                </div>
-
+                
                 <div className="content-section implementation">
                     <DataTable value={this.props.borrowers} paginator={true} rows={this.props.__paging.pageSize} header={header} footer={footer} totalRecords={this.props.__paging.count}
                         selectionMode="single" selection={this.state.selectedBorrower} onSelectionChange={event => this.setState({ selectedBorrower: event.value })}
                         onRowSelect={this.onBorrowerSelect} lazy={true} first={this.state.first} onPage={this.onPage} loading={this.props.loading}
-                        sortField={this.state.sortField} sortOrder={this.state.sortOrder} onSort={(e) => this.setState({ sortField: e.sortField, sortOrder: e.sortOrder })}>
+                        sortField={this.state.sortField} sortOrder={this.state.sortOrder} onSort={this.onSort}>
                         <Column field="name" header="Name" sortable={true} />
                         <Column field="address" header="Address" sortable={true} />
                         <Column field="phone" header="Phone Number" sortable={true} />
