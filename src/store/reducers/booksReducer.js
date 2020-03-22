@@ -58,7 +58,7 @@ const bookReducer = (state = initialState, action) => {
 }
 
 const reducer = combineReducers({
-    book: bookReducer
+    book : bookReducer
 });
 
 export default reducer;

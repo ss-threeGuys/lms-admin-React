@@ -8,7 +8,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import { Dropdown } from 'primereact/dropdown'
-
+import { Target } from '../store/reducers';
 
 export class Books extends React.Component {
 
@@ -245,13 +245,13 @@ export class Books extends React.Component {
 export const mapStatetoProps = (state) => {
     console.log(state)
     return {
-        books: state.booksReducer.book.books,
-        pageSize: state.booksReducer.book.paging.__paging.pageSize,
-        count: state.booksReducer.book.paging.__paging.count,
-        currentPage: state.booksReducer.book.paging.__paging.currentPage,
-        loading: state.booksReducer.book.loading,
-        sortField: state.booksReducer.book.paging.__paging.sortField,
-        sortOrder: parseInt(state.booksReducer.book.paging.__paging.sortOrder)
+        books: state[Target.BOOK].book.books,
+        pageSize: state[Target.BOOK].book.paging.__paging.pageSize,
+        count: state[Target.BOOK].book.paging.__paging.count,
+        currentPage: state[Target.BOOK].book.paging.__paging.currentPage,
+        loading: state[Target.BOOK].book.loading,
+        sortField: state[Target.BOOK].book.paging.__paging.sortField,
+        sortOrder: parseInt(state[Target.BOOK].book.paging.__paging.sortOrder)
 
     }
 }

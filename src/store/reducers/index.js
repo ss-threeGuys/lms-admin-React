@@ -27,7 +27,7 @@ export const Task = {
 
 export default combineReducers({
     [Target.AUTHOR]     : authorsReducer,
-    booksReducer,
+    [Target.BOOK]       : booksReducer,
     [Target.GENRE]      : genresReducer,
     [Target.PUBLISHER]  : publishersReducer,
     [Target.BRANCH]     : branchesReducer,
