@@ -1,19 +1,25 @@
-import Method from "axios";
+
+let publisherBaseUrl = process.env.REACT_APP_BASE_URL_PUBLISHER; 
+let authorBaseUrl = process.env.REACT_APP_BASE_URL_AUTHOR; 
 
 export const crudUrls = {
-  baseHost: "localhost",
-  basePort: 3000,
-  prefix: "/admin",
-
-
+ 
     publisher : {
-        create:     { url: '/publishers', param:{} },
-        retrieve:   { url: '/publishers', param:{} },
-        update:     { url: '/publishers/:id', param: {id:'_id'} },
-        delete:     { url: '/publishers/:id', param: {id:'_id'} } 
+        create:     { url: publisherBaseUrl, param:{} },
+        retrieve:   { url: publisherBaseUrl, param:{} },
+        pagination: { url: publisherBaseUrl+'paging', param:{} },
+        update:     { url: publisherBaseUrl+':id', param: {id:'_id'} },
+        delete:     { url: publisherBaseUrl+':id', param: {id:'_id'} } 
     },
-    branches: { url: "/branches" },
-    author: '/authors',
+    author : {
+        create:     { url: authorBaseUrl, param:{} },
+        retrieve:   { url: authorBaseUrl, param:{} },
+        pagination: { url: authorBaseUrl+'paging', param:{} },
+        update:     { url: authorBaseUrl+':id', param: {id:'_id'} },
+        delete:     { url: authorBaseUrl+':id', param: {id:'_id'} } 
+    },
+
+
     book : '/books',
 
     genre : {
