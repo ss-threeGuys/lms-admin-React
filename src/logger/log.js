@@ -65,3 +65,25 @@ export default {
     },
 }
 
+if (window) {
+    window.__defineGetter__('verbose' ,() => {
+        let prevLevel = environment.log;
+        environment.log = LogLevel.TRACE;
+        return 'Change log level from '+prevLevel+' to '+environment.log;
+    });
+
+    window.__defineGetter__('quiet', () => {
+        let prevLevel = environment.log;
+        environment.log = LogLevel.NONE;
+        return 'Change log level from '+prevLevel+' to '+environment.log;
+        
+    });
+
+    window.LogLevel = {...LogLevel};
+
+    console.info('Log Level is ', environment.log,'.');
+    console.log('Type \'verbose\' to turn ON log message.');
+    console.log('Type \'quite\' to turn OFF log message.');
+
+}
+
