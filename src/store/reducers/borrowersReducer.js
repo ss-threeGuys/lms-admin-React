@@ -27,7 +27,7 @@ const initialState = {
 }
 
 const borrowerReducer = (state = initialState, action) => {
-    let newGenres = [...state.borrowers];
+    let newBorrowers = [...state.borrowers];
     switch (action.type) {
         case READ_BORROWERS_SUCCESFUL:
             return { ...state, paging: action.data.pop(), borrowers: action.data, loading: false }
@@ -37,25 +37,22 @@ const borrowerReducer = (state = initialState, action) => {
             return { ...state, loading: false, error: action.error }
 
         case CREATE_BORROWERS_SUCCESFUL:
-            newGenres.push(action.data);
-            return { ...state, borrowers: newGenres, loading: false }
+            newBorrowers.push(action.data);
+            return { ...state, borrowers: newBorrowers, loading: false }
         case CREATE_BORROWERS_PENDING:
             return { ...state, loading: true }
         case CREATE_BORROWERS_FAILURE:
             return { ...state, loading: false, error: action.error }
 
         case UPDATE_BORROWERS_SUCCESFUL:
-            //newGenres[newGenres.findIndex(borrower => action.data._id === borrower._id)] = action.data;
-            return { ...state, borrowers: newGenres, loading: false }
+            return { ...state, borrowers: newBorrowers, loading: false }
         case UPDATE_BORROWERS_PENDING:
             return { ...state, loading: true }
         case UPDATE_BORROWERS_FAILURE:
             return { ...state, loading: false, error: action.error }
 
         case DELETE_BORROWERS_SUCCESFUL:
-            // let index = newGenres.findIndex(borrower => action.data._id === borrower._id);
-            // newGenres = newGenres.filter((_, i) => i !== index);
-            return { ...state, borrowers: newGenres, loading: false }
+            return { ...state, borrowers: newBorrowers, loading: false }
         case DELETE_BORROWERS_PENDING:
             return { ...state, loading: true }
         case DELETE_BORROWERS_FAILURE:

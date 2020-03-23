@@ -45,7 +45,6 @@ const genreReducer = (state = initialState, action) => {
             return { ...state, loading: false, error: action.error }
 
         case UPDATE_GENRES_SUCCESFUL:
-            //newGenres[newGenres.findIndex(genre => action.data._id === genre._id)] = action.data;
             return { ...state, genres: newGenres, loading: false }
         case UPDATE_GENRES_PENDING:
             return { ...state, loading: true }
@@ -53,8 +52,6 @@ const genreReducer = (state = initialState, action) => {
             return { ...state, loading: false, error: action.error }
 
         case DELETE_GENRES_SUCCESFUL:
-            // let index = newGenres.findIndex(genre => action.data._id === genre._id);
-            // newGenres = newGenres.filter((_, i) => i !== index);
             return { ...state, genres: newGenres, loading: false }
         case DELETE_GENRES_PENDING:
             return { ...state, loading: true }

@@ -13,12 +13,6 @@ export class Genres extends React.Component {
             displayDialog: false,
             valid: false
         }
-        this.save = this.save.bind(this);
-        this.delete = this.delete.bind(this);
-        this.onGenreSelect = this.onGenreSelect.bind(this);
-        this.addNew = this.addNew.bind(this);
-        this.onPage = this.onPage.bind(this);
-        this.onSort = this.onSort.bind(this);
     }
 
     componentDidMount() {
@@ -33,7 +27,7 @@ export class Genres extends React.Component {
             , this.props.__paging.pageSize);
     }
 
-    save() {
+    save = () => {
         if (this.newGenre) {
             this.props.actions.createGenre(this.state.genre)
                 .then(() => { this.readGenres() });
@@ -45,35 +39,35 @@ export class Genres extends React.Component {
         this.setState({ selectedGenre: null, genre: null, displayDialog: false });
     }
 
-    onPage(event) {
+    onPage = (event) => {
         this.setState({ first: event.first });
         const currentPage = 1 + (event.first / this.props.__paging.pageSize)
         this.props.actions.readGenres(this.state.sortField, this.state.sortOrder, currentPage, this.props.__paging.pageSize)
     }
 
-    onSort(event) {
+    onSort = (event) => {
         this.setState({ sortField: event.sortField, sortOrder: event.sortOrder })
         this.props.actions.readGenres(event.sortField, event.sortOrder, this.props.__paging.currentPage, this.props.__paging.pageSize);
     }
 
-    delete() {
+    delete = () => {
         this.props.actions.deleteGenre(this.state.genre)
             .then(() => { this.readGenres() });
         this.setState({ selectedGenre: null, genre: null, displayDialog: false });
     }
 
-    updateProperty(property, value) {
+    updateProperty = (property, value) => {
         let genre = this.state.genre;
         genre[property] = value;
         this.setState({ genre: genre });
     }
 
-    onGenreSelect(event) {
+    onGenreSelect = (event) => {
         this.newGenre = false;
         this.setState({ displayDialog: true, genre: Object.assign({}, event.data), valid: true })
     }
 
-    addNew() {
+    addNew = () => {
         this.newGenre = true;
         this.setState({ genre: { name: '' }, displayDialog: true, valid: false });
     }

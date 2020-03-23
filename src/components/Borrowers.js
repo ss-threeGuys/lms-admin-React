@@ -15,13 +15,6 @@ export class Borrowers extends React.Component {
             nameValid: true,
             phoneValid: true
         }
-        this.save = this.save.bind(this);
-        this.delete = this.delete.bind(this);
-        this.onBorrowerSelect = this.onBorrowerSelect.bind(this);
-        this.addNew = this.addNew.bind(this);
-        this.onPage = this.onPage.bind(this);
-        this.onSort = this.onSort.bind(this);
-        this.validate = this.validate.bind(this);
     }
 
     componentDidMount() {
@@ -36,7 +29,7 @@ export class Borrowers extends React.Component {
             , this.props.__paging.pageSize);
     }
 
-    save() {
+    save = () => {
         if (this.newBorrower) {
             this.props.actions.createBorrower(this.state.borrower)
                 .then(() => { this.readBorrowers() });
@@ -48,40 +41,40 @@ export class Borrowers extends React.Component {
         this.setState({ selectedBorrower: null, borrower: null, displayDialog: false });
     }
 
-    onPage(event) {
+    onPage = (event) => {
         this.setState({ first: event.first });
         const currentPage = 1 + (event.first / this.props.__paging.pageSize)
         this.props.actions.readBorrowers(this.state.sortField, this.state.sortOrder, currentPage, this.props.__paging.pageSize)
     }
 
-    onSort(event) {
+    onSort = (event) => {
         this.setState({sortField: event.sortField, sortOrder: event.sortOrder})
         this.props.actions.readBorrowers(event.sortField, event.sortOrder, this.props.__paging.currentPage, this.props.__paging.pageSize);
     }
 
-    delete() {
+    delete = ()  => {
         this.props.actions.deleteBorrower(this.state.borrower)
             .then(() => { this.readBorrowers() });
         this.setState({ selectedBorrower: null, borrower: null, displayDialog: false });
     }
 
-    updateProperty(property, value) {
+    updateProperty = (property, value) => {
         let borrower = this.state.borrower;
         borrower[property] = value;
         this.setState({ borrower: borrower });
     }
 
-    onBorrowerSelect(event) {
+    onBorrowerSelect = (event) => {
         this.newBorrower = false;
         this.setState({ displayDialog: true, borrower: Object.assign({}, event.data), valid: true })
     }
 
-    addNew() {
+    addNew = () => {
         this.newBorrower = true;
         this.setState({ borrower: { name: '' }, displayDialog: true, valid: false });
     }
 
-    validate() {
+    validate = () => {
         if (this.state.borrower.name && (!this.state.borrower.phone || /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(this.state.borrower.phone))) {
             this.setState({valid: true});
         }
