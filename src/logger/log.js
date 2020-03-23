@@ -24,20 +24,26 @@ const setting = {
     [LogLevel.TRACE]         : {abbr: 'T', level: 1, severity: 'log'},
 }
 
+const genericLogFunction = console.log;
+
+let genericLogWarningDisplayed = false;
 
 export function logger(thisLevel, message, ...optionalParams){
 
     let level = environment.log;
 
     if (setting[thisLevel].level >= setting[level].level) {
-        let loggingFunction = console[setting[thisLevel].severity];
+
+        let loggingFunction = genericLogFunction;
         
-        if (!loggingFunction)
-            loggingFunction = console.log;
-            
-        loggingFunction('['+setting[thisLevel].abbr+'] ', message, optionalParams);
+        if (setting[thisLevel].severity !== 'log')   
+            loggingFunction = console[setting[thisLevel].severity]?console[setting[thisLevel].severity]:genericLogFunction;
+                    
+        loggingFunction('['+setting[thisLevel].abbr+'] ', message, ...optionalParams);
     }
 }
+
+
 
 export default {
     critical : (message, ...optionalParams) => {
@@ -85,5 +91,15 @@ if (window) {
     console.log('Type \'verbose\' to turn ON log message.');
     console.log('Type \'quite\' to turn OFF log message.');
 
+
+
+    console.log = (message, ...optionalParams) => {
+        if (!genericLogWarningDisplayed) {
+            console.warn("Your console.log(message) may not show up, unless you turn ON the log message.");
+            console.warn("Please consider using log API -- Krissada")            
+        }
+        genericLogWarningDisplayed = true;
+        logger(LogLevel.TRACE, "* "+message, ...optionalParams);
+    }
 }
 
