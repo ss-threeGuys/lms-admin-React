@@ -8,6 +8,7 @@ export default function (
     error
     ) {
         return {
+            type:target+'/'+task+'/'+actionState,
             target:target, 
             task:task, 
             actionState:actionState,

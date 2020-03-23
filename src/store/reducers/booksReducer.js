@@ -33,6 +33,7 @@ const initialState = {
     loading: false
 }
 
+
 const bookReducer = (state = initialState, action) => {
     switch (action.type) {
         case READ_BOOKS_SUCCESFUL:
@@ -62,3 +63,4 @@ const reducer = combineReducers({
 });
 
 export default reducer;
+
