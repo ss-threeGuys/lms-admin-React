@@ -1,10 +1,14 @@
 
 
 export const crudUrls = {
+    
+    /* DO NOT DELETE */
+    baseProtocol: 'http',
     baseHost: "localhost",
     basePort: 3000,
     prefix: "/admin",
 
+    /* DO NOT DELETE */
     publisher : {
         create:     { url: '/publishers', param:{} },
         retrieve:   { url: '/publishers', param:{} },
@@ -13,6 +17,7 @@ export const crudUrls = {
         delete:     { url: '/publishers/:id', param: {id:'_id'} } 
     },
 
+    /* DO NOT DELETE */
     author : {
         create:     { url: '/authors', param:{} },
         retrieve:   { url: '/authors', param:{} },
@@ -25,6 +30,7 @@ export const crudUrls = {
 
     book : '/books',    
 
+    /* DO NOT DELETE */
     genre : {
         create:     { url: '/genres', param:{} },
         retrieve:   { url: '/genres', param:{} },
@@ -32,6 +38,7 @@ export const crudUrls = {
         delete:     { url: '/genres/:id', param: {id:'_id'} } 
     },
 
+    /* DO NOT DELETE */
     borrower : {
         create:     { url: '/borrowers', param:{} },
         retrieve:   { url: '/borrowers', param:{} },

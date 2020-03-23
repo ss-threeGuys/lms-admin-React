@@ -5,13 +5,17 @@ import axios from 'axios';
 import store from '../store'
 import log from "../logger/log";
 
+const baseUrl = environment.crudUrls.baseProtocol+'://'
+                    +environment.crudUrls.baseHost+':'+environment.crudUrls.basePort
+                    +environment.crudUrls.prefix;
+
 export default (hocName, hocTarget) => {
     const crudUrls = {
-        create:     environment.crudUrls[hocName.toLowerCase()].create.url,
-        retrieve:   environment.crudUrls[hocName.toLowerCase()].retrieve.url,
-        pagination: environment.crudUrls[hocName.toLowerCase()].pagination.url,
-        update:     environment.crudUrls[hocName.toLowerCase()].update.url,
-        delete:     environment.crudUrls[hocName.toLowerCase()].delete.url,
+        create:     baseUrl+environment.crudUrls[hocName.toLowerCase()].create.url,
+        retrieve:   baseUrl+environment.crudUrls[hocName.toLowerCase()].retrieve.url,
+        pagination: baseUrl+environment.crudUrls[hocName.toLowerCase()].pagination.url,
+        update:     baseUrl+environment.crudUrls[hocName.toLowerCase()].update.url,
+        delete:     baseUrl+environment.crudUrls[hocName.toLowerCase()].delete.url,
     };
 
 
