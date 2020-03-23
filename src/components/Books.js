@@ -76,7 +76,7 @@ export class Books extends React.Component {
         }
 
         let sortField = sortFields[event.sortField]
-        let sortOrder = this.props.sortOrder * -1;
+        let sortOrder = event.sortOrder
 
         this.props.dispatch(readBooks(sortField, sortOrder, this.props.currentPage, this.props.pageSize))
 
@@ -178,6 +178,8 @@ export class Books extends React.Component {
                     authors={this.state.authors}
                     genres={this.state.genres}
                     newBook={this.newBook}
+                    sortField={this.props.sortField}
+                    sortOrder={this.props.sortOrder}
                 /> 
             </div>
 

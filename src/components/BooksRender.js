@@ -22,6 +22,17 @@ export const BooksRender = (props) => {
         <Button disabled={!props.valid} label="Save" icon="pi pi-check" onClick={props.save} />
     </div>;
 
+    const sortFields = {
+        "title": "title",
+        "authors": "authorNames",
+        "genres": "genreNames",
+        "publisher": "publisherName"
+    }
+
+    let sortField = sortFields[props.sortField]
+
+
+
     if (props.loading) {
         return <p>loading...</p>
     }
@@ -31,7 +42,7 @@ export const BooksRender = (props) => {
             <DataTable value={outputBooks} paginator={true} rows={props.pageSize} totalRecords={props.totalRecords}
                 lazy={true} first={props.first} onPage={props.onPage} onSort={props.onSort} loading={props.loading} footer={footer}
                 selectionMode="single" selection={props.selectedBook} onSelectionChange={e => props.onSelectionChange(e)}
-                onRowSelect={props.onRowSelect} header={header}>
+                onRowSelect={props.onRowSelect} header={header} sortField={sortField} sortOrder={props.sortOrder}>
 
                 <Column field="title" header="Title" sortable={true} />
                 <Column field="authorNames" header="Authors" sortable={true} />
@@ -39,14 +50,14 @@ export const BooksRender = (props) => {
                 <Column field="publisherName" header="Publisher" sortable={true} />
             </DataTable>
 
-            <Dialog visible={props.displayDialog} width="300px" header="Book Details" modal={true} footer={dialogFooter} onHide={()=> props.onHide()}>
+            <Dialog visible={props.displayDialog} width="300px" header="Book Details" modal={true} footer={dialogFooter} onHide={() => props.onHide()}>
                 {
                     props.book &&
 
                     <div className="p-grid p-fluid">
                         <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="title">Title</label></div>
                         <div className="p-col-8" style={{ padding: '.5em' }}>
-                            <InputText id="title" required={true} onChange={e => props.onChange(e, 'title') } value={props.book.title} />
+                            <InputText id="title" required={true} onChange={e => props.onChange(e, 'title')} value={props.book.title} />
                         </div>
                         <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="authors">Authors</label></div>
                         <div className="p-col-8" style={{ padding: '.5em' }}>
@@ -58,7 +69,7 @@ export const BooksRender = (props) => {
                         </div>
                         <div className="p-col-4" style={{ padding: '.75em' }}><label htmlFor="publishers">Publishers</label></div>
                         <div className="p-col-8" style={{ padding: '.5em' }}>
-                            <Dropdown options={props.publishers} id="publishers" onChange={(e) => props.onChange(e, 'publisher') } value={props.book.publisher} filter={true} />
+                            <Dropdown options={props.publishers} id="publishers" onChange={(e) => props.onChange(e, 'publisher')} value={props.book.publisher} filter={true} />
                         </div>
                     </div>
                 }
