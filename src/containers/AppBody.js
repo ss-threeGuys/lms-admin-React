@@ -4,8 +4,6 @@ import HocContainer from './HocContainer';
 import { Target } from '../store/actions';
 import authorMap from '../domains/author.map';
 import publisherMap from '../domains/publisher.map';
-import Authors from '../components/Authors';
-import Publishers from '../components/Publishers';
 import genreContainer from '../containers/genreContainer'
 import borrowerContainer from './borrowerContainer';
 import Books from '../components/Books'
