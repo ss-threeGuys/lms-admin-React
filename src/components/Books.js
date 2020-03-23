@@ -169,7 +169,7 @@ export class Books extends React.Component {
                     onSort={this.onSort}
                     selectedBook={this.state.selectedBook}
                     onSelectionChange={e => this.setState({ selectedBook: e.value })}
-                    onRowSelect={this.onBookSelect}
+                    onRowSelect={e => this.onBookSelect(e)}
                     displayDialog={this.state.displayDialog}
                     onHide={() => this.setState({ displayDialog: false })}
                     book={this.state.book}
