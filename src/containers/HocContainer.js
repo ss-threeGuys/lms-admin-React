@@ -162,22 +162,26 @@ export default (hocName, hocTarget, hocColumnMap) => {
         onKeyUp(event) {
             log.trace('onKeyUp(event)', event.target.id, event.target.value, this.state.input);
 
-            event.target.value = event.target.value.trimStart();
+ 
+            this.setState({
+                input: {...this.state.input, [event.target.id]: event.target.value.trimStart()},
+                valid: false,
+            });
 
             for (const col of hocColumnMap) {
-                if (col.field === event.target.id && col.validators) {
+              
+                if (col.validators)
                     for (const validator of col.validators) {
-                        if (!validator(event.target.value)) {
+                        if (!validator(this.state.input[col.field])) {
                             this.setState({valid: false});
-                            return;
+                            return; 
                         }
                     }
-                }
+                
             }
             
     
             this.setState({
-                input: {...this.state.input, [event.target.id]: event.target.value.trimStart()},
                 valid: true,
             });
         }
