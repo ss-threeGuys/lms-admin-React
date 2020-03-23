@@ -4,7 +4,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
 import columnMap from '../domains/publisher/publisher.map'
-import { Target } from '../store/reducers';
+//import { Target } from '../store/reducers';
 import { connect } from 'react-redux';
 
 class Publishers extends React.Component{
@@ -42,7 +42,7 @@ class Publishers extends React.Component{
 
     onPage(event) {
         console.log(event);
-        const currentPage = 1 + (event.first/this.props.pageSize)
+        //const currentPage = 1 + (event.first/this.props.pageSize)
         // this.props.dispatch(readBooks('title', 1, currentPage, this.props.pageSize))
         this.setState({first : event.first})
     }
