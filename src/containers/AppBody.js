@@ -22,7 +22,6 @@ export default class AppBody extends React.Component{
               <Route path = '/admin/books'      component = { Books}/>
               <Route path = '/admin/genres'     component = { genreContainer } />
               <Route path = '/admin/publishers' component = { HocContainer('Publisher', Target.PUBLISHER, publisherMap) } />
-              <Route path = '/admin/publishers' component = { Publishers } />
               <Route path = '/admin/branches'   render = {(props) => (<div {...props}>Branches work!</div>)}/>
               <Route path = '/admin/borrowers'  component = { borrowerContainer }/>
           </Switch>
