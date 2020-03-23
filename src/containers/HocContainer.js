@@ -73,7 +73,6 @@ export default (hocName, hocTarget, hocColumnMap) => {
     
 
         onPage(event) {
-    
             this.doServiceRetrieve({ 
                 paging: {   
                     ...this.props.paging,
@@ -105,7 +104,7 @@ export default (hocName, hocTarget, hocColumnMap) => {
                 deleteConfirmed: false,
             });
         }
-        
+
         onAddButtonClick(event) {
             log.trace('onAddButtonClick(event)', event);
             
