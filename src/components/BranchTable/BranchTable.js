@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-
+import { InputText } from "primereact/inputtext";
+import { Dialog } from "primereact/dialog";
 import { connect } from "react-redux";
 import * as branchActions from "../../store/actions/branchActions";
 
@@ -12,9 +13,12 @@ class BranchTable extends Component {
 
     this.componentName = "Branches";
     this.state = {
-      first: 0
+      first: 0,
+      displayDialog: false,
+      valid: true
     };
   }
+
   componentDidMount() {
     // console.log("read Branches");
     const pagingInfo = {
@@ -26,8 +30,28 @@ class BranchTable extends Component {
     this.props.readBranches(pagingInfo);
   }
 
+  hideDialog = displayState => {
+    this.setState({ displayDialog: displayState });
+  };
+
   onRowSelect = event => {
-    console.log(event);
+    this.newBranch = false;
+    this.setState({
+      displayDialog: true,
+      branch: { ...event.data },
+      valid: true
+    });
+  };
+
+  onSort = event => {
+    const pagingInfo = {
+      sortField: event.sortField,
+      sortOrder: event.sortOrder,
+      curPage: this.props.pagingInfo.currentPage,
+      pageSize: this.props.pagingInfo.pageSize
+    };
+    this.setState({ sortField: event.sortField, sortOrder: event.sortOrder });
+    this.props.readBranches(pagingInfo);
   };
 
   onPage = event => {
@@ -35,18 +59,72 @@ class BranchTable extends Component {
     const currentPage = 1 + event.first / pageSize;
 
     const pagingInfo = {
-      sortField: "branchName",
-      sortOrder: 1,
+      sortField: this.props.pagingInfo.sortField,
+      sortOrder: this.props.pagingInfo.sortOrder,
       curPage: currentPage,
-      pageSize: pageSize
+      pageSize: this.props.pagingInfo.pageSize
     };
 
     this.props.readBranches(pagingInfo);
     this.setState({ first: event.first });
   };
 
-  onModelFilterChange = event => {
-    console.log(event);
+  updateProperty = (property, value) => {
+    let branch = this.state.branch;
+    branch[property] = value;
+    this.setState({ branch: branch });
+    if (this.state.branch.branchName.trim().length >= 2) {
+      this.setState({ valid: true });
+    } else {
+      this.setState({ valid: false });
+    }
+  };
+
+  addNew = () => {
+    this.newBranch = true;
+    this.setState({
+      branch: { branchName: " ", branchAddress: " " },
+      valid: false,
+      displayDialog: true
+    });
+  };
+
+  save = () => {
+    const pagingInfo = {
+      sortField: this.props.pagingInfo.sortField,
+      sortOrder: this.props.pagingInfo.sortOrder,
+      curPage: this.props.pagingInfo.curPage,
+      pageSize: this.props.pagingInfo.pageSize
+    };
+    if (this.newBranch) {
+      Promise.resolve(this.props.addBranch(this.state.branch)).then(() => {
+        this.props.readBranches(pagingInfo);
+      });
+    } else {
+      Promise.resolve(this.props.updateBranch(this.state.branch)).then(() =>
+        this.props.readBranches(pagingInfo)
+      );
+    }
+
+    this.setState({ selectedBranch: null, branch: null, displayDialog: false });
+  };
+
+  delete = () => {
+    const pagingInfo = {
+      sortField: this.props.pagingInfo.sortField,
+      sortOrder: this.props.pagingInfo.sortOrder,
+      curPage: this.props.pagingInfo.curPage,
+      pageSize: this.props.pagingInfo.pageSize
+    };
+    Promise.resolve(this.props.deleteBranch(this.state.branch)).then(() =>
+      this.props.readBranches(pagingInfo)
+    );
+
+    this.setState({
+      selectedBranch: null,
+      branch: null,
+      displayDialog: false
+    });
   };
 
   renderColumn = () => {
@@ -62,6 +140,48 @@ class BranchTable extends Component {
         sortable={true}
       />
     ));
+  };
+
+  renderDialog = footer => {
+    return (
+      <Dialog
+        visible={this.state.displayDialog}
+        width="300px"
+        header="Branch Details"
+        modal={true}
+        footer={footer}
+        onHide={() => this.setState({ displayDialog: false })}
+      >
+        {this.state.branch && (
+          <div className="p-grid p-fluid">
+            <div className="p-col-4" style={{ padding: ".75em" }}>
+              <label htmlFor="branchName">Branch Name</label>
+            </div>
+            <div className="p-col-8" style={{ padding: ".5em" }}>
+              <InputText
+                id="branchName"
+                onChange={e => {
+                  this.updateProperty("branchName", e.target.value);
+                }}
+                value={this.state.branch.branchName}
+              />
+            </div>
+            <div className="p-col-4" style={{ padding: ".75em" }}>
+              <label htmlFor="branchAddress">Branch Address</label>
+            </div>
+            <div className="p-col-8" style={{ padding: ".5em" }}>
+              <InputText
+                id="branchAddress"
+                onChange={e => {
+                  this.updateProperty("branchAddress", e.target.value);
+                }}
+                value={this.state.branch.branchAddress}
+              />
+            </div>
+          </div>
+        )}
+      </Dialog>
+    );
   };
 
   render() {
@@ -81,26 +201,45 @@ class BranchTable extends Component {
         />
       </div>
     );
+    let dialogFooter = (
+      <div className="ui-dialog-buttonpane p-clearfix">
+        {!this.newBranch && (
+          <Button label="Delete" icon="pi pi-times" onClick={this.delete} />
+        )}
+        <Button
+          disabled={!this.state.valid}
+          label="Save"
+          icon="pi pi-check"
+          onClick={this.save}
+        />
+      </div>
+    );
     return (
-      <DataTable
-        ref={el => (this.dt = el)}
-        value={this.props.branches}
-        paginator={true}
-        rows={this.props.pagingInfo.pageSize}
-        totalRecords={this.props.pagingInfo.count}
-        header={header}
-        footer={footer}
-        selectionMode="single"
-        selection={this.state.selected}
-        onSelectionChange={e => this.setState({ selected: e.value })}
-        onRowSelect={this.onRowSelect}
-        lazy={true}
-        first={this.state.first}
-        onPage={this.onPage}
-        loading={this.props.loading}
-      >
-        {this.renderColumn()}
-      </DataTable>
+      <React.Fragment>
+        <DataTable
+          ref={el => (this.dt = el)}
+          value={this.props.branches}
+          paginator={true}
+          rows={this.props.pagingInfo.pageSize}
+          totalRecords={this.props.pagingInfo.count}
+          header={header}
+          footer={footer}
+          selectionMode="single"
+          selection={this.state.selectedBranch}
+          onSelectionChange={e => this.setState({ selected: e.value })}
+          onRowSelect={this.onRowSelect}
+          lazy={true}
+          first={this.state.first}
+          onPage={this.onPage}
+          loading={this.props.loading}
+          sortField={this.state.sortField}
+          sortOrder={this.state.sortOrder}
+          onSort={this.onSort}
+        >
+          {this.renderColumn()}
+        </DataTable>
+        {this.renderDialog(dialogFooter)}
+      </React.Fragment>
     );
   }
 }
@@ -121,7 +260,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    readBranches: pagingInfo => dispatch(branchActions.readBranches(pagingInfo))
+    readBranches: pagingInfo =>
+      dispatch(branchActions.readBranches(pagingInfo)),
+    addBranch: branch => dispatch(branchActions.addBranch(branch)),
+    updateBranch: branch => dispatch(branchActions.updateBranch(branch)),
+    deleteBranch: branch => dispatch(branchActions.deleteBranch(branch))
   };
 };
 

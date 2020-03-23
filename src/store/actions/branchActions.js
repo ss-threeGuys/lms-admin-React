@@ -22,11 +22,10 @@ export const readBranchesPending = () => {
   };
 };
 
-export const addBranchesSuccess = (branches, pagingInfo) => {
+export const addBranchesSuccess = branch => {
   return {
     type: actionTypes.ADD_BRANCHES_SUCCESSFUL,
-    branches: branches,
-    pagingInfo: pagingInfo
+    branch: branch
   };
 };
 
@@ -40,6 +39,44 @@ export const addBranchesFailed = error => {
 export const addBranchesPending = () => {
   return {
     type: actionTypes.ADD_BRANCHES_PENDING
+  };
+};
+
+export const updateBranchesSuccess = () => {
+  return {
+    type: actionTypes.UPDATE_BRANCHES_SUCCESSFUL
+  };
+};
+
+export const updateBranchesFailed = error => {
+  return {
+    type: actionTypes.UPDATE_BRANCHES_FAILURE,
+    error: error
+  };
+};
+
+export const updateBranchesPending = () => {
+  return {
+    type: actionTypes.UPDATE_BRANCHES_PENDING
+  };
+};
+
+export const deleteBranchesSuccess = () => {
+  return {
+    type: actionTypes.DELETE_BRANCHES_SUCCESSFUL
+  };
+};
+
+export const deleteBranchesFailed = error => {
+  return {
+    type: actionTypes.DELETE_BRANCHES_FAILURE,
+    error: error
+  };
+};
+
+export const deleteBranchesPending = () => {
+  return {
+    type: actionTypes.DELETE_BRANCHES_PENDING
   };
 };
 
@@ -71,8 +108,47 @@ export const readBranches = pagingInfo => {
 
 export const addBranch = branch => {
   return dispatch => {
+    dispatch(addBranchesPending());
     axios
-      .post(`${process.env.REACT_APP_BASE_URL_BRANCH}branches`, branch)
-      .then(response => {});
+      .post(`${process.env.REACT_APP_BASE_URL_BRANCH}`, branch)
+      .then(response => {
+        const branch = response.data;
+
+        dispatch(addBranchesSuccess(branch));
+      })
+      .catch(error => {
+        dispatch(addBranchesFailed(error.message));
+      });
+  };
+};
+
+export const updateBranch = branch => {
+  return dispatch => {
+    dispatch(updateBranchesPending());
+    axios
+      .put(`${process.env.REACT_APP_BASE_URL_BRANCH}${branch._id}`, branch)
+      .then(response => {
+        dispatch(updateBranchesSuccess());
+      })
+      .catch(error => {
+        dispatch(updateBranchesFailed(error.message));
+      });
+  };
+};
+
+export const deleteBranch = branch => {
+  return dispatch => {
+    dispatch(deleteBranchesPending());
+    axios
+      .delete(
+        `${process.env.REACT_APP_BASE_URL_BRANCH}${branch._id}`,
+        branch._id
+      )
+      .then(response => {
+        dispatch(deleteBranchesSuccess());
+      })
+      .catch(error => {
+        dispatch(deleteBranchesFailed(error.message));
+      });
   };
 };
