@@ -6,6 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { Dialog } from "primereact/dialog";
 import { connect } from "react-redux";
 import * as branchActions from "../../store/actions/branchActions";
+import { Target } from "../../store/reducers";
 
 class BranchTable extends Component {
   constructor(props) {
@@ -245,10 +246,10 @@ class BranchTable extends Component {
 }
 
 const mapStateToProps = state => {
-  let branches = state.branchesReducer.branches;
-  let pagingInfo = state.branchesReducer.pagingInfo;
-  let loading = state.branchesReducer.requestPending;
-  let error = state.branchesReducer.error;
+  let branches = state[Target.BRANCH].branches;
+  let pagingInfo = state[Target.BRANCH].pagingInfo;
+  let loading = state[Target.BRANCH].requestPending;
+  let error = state[Target.BRANCH].error;
 
   return {
     branches: branches,
