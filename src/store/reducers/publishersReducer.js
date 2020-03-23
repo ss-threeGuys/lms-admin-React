@@ -3,6 +3,7 @@ import { Target, Task } from '.';
 import { State } from '../actions';
 import log from '../../logger/log';
 
+
 let initialState = {
     data: [],
     selected: null,
@@ -127,3 +128,4 @@ export default function publisherReducer(state = initialState, action) {
     }
     return newState;
 };
+
