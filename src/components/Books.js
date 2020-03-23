@@ -79,11 +79,6 @@ export class Books extends React.Component {
         let sortOrder = event.sortOrder
 
         this.props.dispatch(readBooks(sortField, sortOrder, this.props.currentPage, this.props.pageSize))
-
-        this.setState({
-            sortField: sortField,
-            sortOrder: sortOrder
-        })
     }
 
     addNew = () => {
