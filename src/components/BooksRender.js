@@ -11,6 +11,8 @@ export const BooksRender = (props) => {
 
     const outputBooks = props.mapBooksToOutputBook(props.books);
 
+    let header = <div className="p-clearfix" style={{ lineHeight: '1.87em' }}>{props.componentName}</div>;
+
     let footer = <div className="p-clearfix" style={{ width: '100%' }}>
         <Button style={{ float: 'left' }} label="Add" icon="pi pi-plus" onClick={props.addNew} />
     </div>;
@@ -26,11 +28,10 @@ export const BooksRender = (props) => {
 
     return (
         <div>
-            {props.componentName}
             <DataTable value={outputBooks} paginator={true} rows={props.pageSize} totalRecords={props.totalRecords}
                 lazy={true} first={props.first} onPage={props.onPage} onSort={props.onSort} loading={props.loading} footer={footer}
                 selectionMode="single" selection={props.selectedBook} onSelectionChange={e => props.onSelectionChange(e)}
-                onRowSelect={props.onRowSelect}>
+                onRowSelect={props.onRowSelect} header={header}>
 
                 <Column field="title" header="Title" sortable={true} />
                 <Column field="authorNames" header="Authors" sortable={true} />
