@@ -1,13 +1,13 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import HocContainer from "./HocContainer";
-import { Target } from "../store/actions";
-import authorMap from "../domains/author.map";
-import publisherMap from "../domains/publisher.map";
-import genreContainer from "../containers/genreContainer";
+import { Target } from "../../actions";
+import authorMap from "../../domains/author.map";
+import publisherMap from "../../domains/publisher.map";
+import genreContainer from "./genreContainer";
 import borrowerContainer from "./borrowerContainer";
-import Books from "../components/Books";
-import BranchTable from "../components/BranchTable/BranchTable";
+import Books from "../Books";
+import BranchTable from "../BranchTable/BranchTable";
 
 export default class AppBody extends React.Component {
   render() {

@@ -23,7 +23,7 @@ const initialState = {
     next: null,
     count: 0,
     sortField: "branchName",
-    sortOrder: "1"
+    sortOrder: 1
   },
   requestPending: false,
   error: ""
