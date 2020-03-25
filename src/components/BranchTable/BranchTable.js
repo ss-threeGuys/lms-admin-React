@@ -5,8 +5,8 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Dialog } from "primereact/dialog";
 import { connect } from "react-redux";
-import * as branchActions from "../../store/actions/branchActions";
-import { Target } from "../../store/reducers";
+import * as branchActions from "../../actions/branchActions";
+import { Target } from "../../reducers";
 
 class BranchTable extends Component {
   constructor(props) {
@@ -186,13 +186,13 @@ class BranchTable extends Component {
   };
 
   render() {
-    let header = (
+    const header = (
       <div className="p-clearfix" style={{ lineHeight: "1.87em" }}>
         {this.componentName}
       </div>
     );
 
-    let footer = (
+    const footer = (
       <div className="p-clearfix" style={{ width: "100%" }}>
         <Button
           style={{ float: "left" }}
@@ -202,7 +202,7 @@ class BranchTable extends Component {
         />
       </div>
     );
-    let dialogFooter = (
+    const dialogFooter = (
       <div className="ui-dialog-buttonpane p-clearfix">
         {!this.newBranch && (
           <Button label="Delete" icon="pi pi-times" onClick={this.delete} />
@@ -233,8 +233,8 @@ class BranchTable extends Component {
           first={this.state.first}
           onPage={this.onPage}
           loading={this.props.loading}
-          sortField={this.state.sortField}
-          sortOrder={this.state.sortOrder}
+          sortField={this.props.pagingInfo.sortField}
+          sortOrder={parseInt(this.props.pagingInfo.sortOrder)}
           onSort={this.onSort}
         >
           {this.renderColumn()}
