@@ -7,7 +7,8 @@ import publisherMap from "../../domains/publisher.map";
 import genreContainer from "./genreContainer";
 import borrowerContainer from "./borrowerContainer";
 import Books from "../Books";
-import BranchTable from "../BranchTable/BranchTable";
+
+import BranchContainer from "./BranchContainer";
 
 export default class AppBody extends React.Component {
   render() {
@@ -23,7 +24,7 @@ export default class AppBody extends React.Component {
           path="/admin/publishers"
           component={HocContainer("Publisher", Target.PUBLISHER, publisherMap)}
         />
-        <Route path="/admin/branches" component={BranchTable} />
+        <Route path="/admin/branches" component={BranchContainer} />
         <Route path="/admin/borrowers" component={borrowerContainer} />
       </Switch>
     );
