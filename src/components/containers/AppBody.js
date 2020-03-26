@@ -6,8 +6,7 @@ import authorMap from "../../domains/author.map";
 import publisherMap from "../../domains/publisher.map";
 import genreContainer from "./genreContainer";
 import borrowerContainer from "./borrowerContainer";
-import Books from "../Books";
-
+import BooksContainer from "./BooksContainer";
 import BranchContainer from "./BranchContainer";
 
 export default class AppBody extends React.Component {
@@ -18,7 +17,7 @@ export default class AppBody extends React.Component {
           path="/admin/authors"
           component={HocContainer("Author", Target.AUTHOR, authorMap)}
         />
-        <Route path="/admin/books" component={Books} />
+        <Route path="/admin/books" component={BooksContainer} />
         <Route path="/admin/genres" component={genreContainer} />
         <Route
           path="/admin/publishers"

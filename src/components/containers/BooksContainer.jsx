@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   readBooks, addBooks, updateBooks, deleteBooks, readAllAuthors, readAllGenres, readAllPublishers,
-} from '../store/actions/bookActions';
-import BooksRender from './BooksRender';
-import { Target } from '../store/reducers';
+} from '../../actions/bookActions';
+import BooksRender from '../BooksRender';
+import { Target } from '../../reducers';
 
 export class Books extends React.Component {
   constructor(props) {
