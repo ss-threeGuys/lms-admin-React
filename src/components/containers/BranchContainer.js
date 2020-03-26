@@ -6,7 +6,7 @@ import { Target } from "../../reducers";
 import log from "../../logger/log";
 import BranchTable from "../BranchTable/BranchTable";
 
-class BranchContainer extends Component {
+export class BranchContainer extends Component {
   constructor(props) {
     super(props);
 
