@@ -6,10 +6,9 @@ import { Dropdown } from 'primereact/dropdown';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import PropTypes from 'prop-types';
+
 
 const BooksRender = (props) => {
-
   const {
     mapBooksToOutputBook,
     books,

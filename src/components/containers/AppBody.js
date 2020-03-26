@@ -1,13 +1,14 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import HocContainer from "./HocContainer";
-import { Target } from "../store/actions";
-import authorMap from "../domains/author.map";
-import publisherMap from "../domains/publisher.map";
-import genreContainer from "../containers/genreContainer";
+import { Target } from "../../actions";
+import authorMap from "../../domains/author.map";
+import publisherMap from "../../domains/publisher.map";
+import genreContainer from "./genreContainer";
 import borrowerContainer from "./borrowerContainer";
-import Books from "../components/Books";
-import BranchTable from "../components/BranchTable/BranchTable";
+import Books from "../Books";
+
+import BranchContainer from "./BranchContainer";
 
 export default class AppBody extends React.Component {
   render() {
@@ -23,7 +24,7 @@ export default class AppBody extends React.Component {
           path="/admin/publishers"
           component={HocContainer("Publisher", Target.PUBLISHER, publisherMap)}
         />
-        <Route path="/admin/branches" component={BranchTable} />
+        <Route path="/admin/branches" component={BranchContainer} />
         <Route path="/admin/borrowers" component={borrowerContainer} />
       </Switch>
     );
